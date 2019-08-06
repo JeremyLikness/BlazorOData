@@ -1,0 +1,95 @@
+﻿@using BlazorOData.Models;
+@using BlazorOData.Client.Models;
+
+@inject TodoViewModel ViewModel
+
+<h2>Todo List</h2>
+<p>
+    Show Completed:
+    <input type="checkbox" @bind-value="ViewModel.ShowCompleted" />
+</p>
+<p>
+    Sort By Created:
+    <input type="checkbox" @bind-value="ViewModel.SortByCreated" />
+</p>
+@if (ViewModel.ShowCompleted && !ViewModel.SortByCreated)
+{
+    <p>
+        Completed then Created
+        <input type="checkbox" @bind-value="ViewModel.SortByCompleted" />
+    </p>
+}
+<p>Enter new item:</p>
+@if (ViewModel.ValidationHasErrors)
+{
+    <TodoErrors Errors="@ViewModel.Errors" />
+}
+<p>
+    <input name="newItem" type="text"
+           @ref="InputBox"
+           @attributes="inputattributes"
+           @bind-value="ViewModel.NewDescription"
+           @bind-value:event="oninput" />&nbsp;
+    <button @attributes="btnattributes"
+            @onclick="@(async () => await ViewModel.AddNewAsync())">
+        Add
+    </button>
+</p>
+@if (todos == null || ViewModel.Loading)
+{
+    <p><strong>Loading...</strong></p>
+}
+else
+{
+    @foreach (var todo in todos)
+    {
+        <TodoShow CurrentItem="@todo" Markcomplete="@(async () => await ViewModel.MarkdoneAsync(todo))"
+                  Delete="@(async () => await ViewModel.DeleteAsync(todo))" />
+    }
+}
+
+@code {
+    public ElementRef InputBox;
+    public List<Todo> todos;
+    public Dictionary<string, object> btnattributes = new Dictionary<string, object>()
+{
+        {"disabled", ""}
+    };
+
+    public Dictionary<string, object> inputattributes = new Dictionary<string, object>()
+{
+        {"class", "alert-danger"}
+    };
+
+    protected override async Task OnInitAsync()
+    {
+        todos = (await ViewModel.TodosAsync()).ToList();
+        ViewModel.NewDescription = string.Empty;
+        ViewModel.PropertyChanged += async (o, e) =>
+        {
+            CheckButton();
+            if (e.PropertyName.Equals(nameof(ViewModel.TodosAsync)))
+            {
+                todos = (await ViewModel.TodosAsync()).ToList();
+            }
+            StateHasChanged();
+        };
+        await base.OnInitAsync();
+    }
+
+    private void CheckButton()
+    {
+        btnattributes.Clear();
+        inputattributes.Clear();
+        if (ViewModel.Loading)
+        {
+            btnattributes.Add("disabled", "");
+            inputattributes.Add("disabled", "");
+        }
+        else if (ViewModel.ValidationHasErrors)
+        {
+            btnattributes.Add("disabled", "");
+            inputattributes.Add("class", "alert-danger");
+        }
+    }
+}

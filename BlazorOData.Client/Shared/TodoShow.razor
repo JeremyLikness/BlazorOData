@@ -1,0 +1,28 @@
+﻿@using BlazorOData.Models
+
+<hr/>
+<div>
+    <button @onclick="Delete">Delete</button>&nbsp;
+    @if(CurrentItem.Complete)
+    {
+        <p><strong>@CurrentItem.Description</strong></p>
+        <p>Completed: @CurrentItem.MarkedComplete</p>
+    }
+    else
+    {
+        <button @onclick="Markcomplete">Done</button> 
+        <p>@CurrentItem.Description</p>
+    }
+    <p>Created: @CurrentItem.Created</p>
+</div>
+
+@code {
+    [Parameter]
+    public Todo CurrentItem { get; set; }
+
+    [Parameter]
+    public Action Markcomplete { get; set; }
+
+    [Parameter]
+    public Action Delete { get; set; }
+}

@@ -1,0 +1,8 @@
+﻿@foreach(var error in Errors)
+{
+    <div class="alert alert-danger">@error</div>
+}
+@code {
+    [Parameter]
+    public List<string> Errors { get; set; }
+}
