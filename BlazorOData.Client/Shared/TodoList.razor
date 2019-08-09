@@ -43,6 +43,7 @@ else
 {
     @foreach (var todo in todos)
     {
+        <hr />
         <TodoShow CurrentItem="@todo" Markcomplete="@(async () => await ViewModel.MarkdoneAsync(todo))"
                   Delete="@(async () => await ViewModel.DeleteAsync(todo))" />
     }

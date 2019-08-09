@@ -59,7 +59,6 @@ namespace BlazorOData.Client.Models
             {
                 helper.OrderBy(todo => todo.Description);
             }
-            var result = await helper.FindEntriesAsync();
             return await helper.FindEntriesAsync();
         }
 
