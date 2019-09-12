@@ -50,7 +50,7 @@ else
 }
 
 @code {
-    public ElementRef InputBox;
+    public ElementReference InputBox;
     public List<Todo> todos;
     public Dictionary<string, object> btnattributes = new Dictionary<string, object>()
 {
@@ -62,7 +62,7 @@ else
         {"class", "alert-danger"}
     };
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         todos = (await ViewModel.TodosAsync()).ToList();
         ViewModel.NewDescription = string.Empty;
@@ -75,7 +75,7 @@ else
             }
             StateHasChanged();
         };
-        await base.OnInitAsync();
+        await base.OnInitializedAsync();
     }
 
     private void CheckButton()

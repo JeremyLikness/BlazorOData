@@ -16,7 +16,7 @@ namespace BlazorOData.Client.Models
         {
             client.BaseAddress = new Uri("http://localhost:5000/odata/");
             var settings = new ODataClientSettings(client);
-            _client = new Simple.OData.Client.ODataClient(settings);
+            _client = new ODataClient(settings);
         }
 
         public async Task<Todo> AddAsync(Todo itemToAdd)
