@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Blazor.Hosting;
+﻿using System.Threading.Tasks;
+using BlazorOData.Client.Models;
+using Microsoft.AspNetCore.Blazor.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorOData.Client
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var builder = WebAssemblyHostBuilder.CreateDefault();
+            builder.RootComponents.Add<App>("app");
+            builder.Services.AddSingleton<ITodoDataAccess, TodoSimpleOData>();
+            builder.Services.AddSingleton<TodoViewModel>();
+            await builder.Build().RunAsync();
         }
-
-        public static IWebAssemblyHostBuilder CreateHostBuilder(string[] args) =>
-            BlazorWebAssemblyHost.CreateDefaultBuilder()
-                .UseBlazorStartup<Startup>();
     }
 }
